@@ -30,3 +30,29 @@
 
 </body>
 </html>
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+DAA-AAD: did you copy and paste the wrong thing again?
+
+function images(){ctx.clearRect(0,0,canvas.width,canvas.height);
+  if(platformart.complete){ctx.drawImage(platformart,platform.x,platform.y,platform.w,platform.h)}
+  if(playerart.complete){ctx.drawImage(playerart,froop.x,froop.y,froop.w,froop.h);}
+  if(dedart.complete&&ded==1){ctx.drawImage(dedart,0,0,919,919)}
+  requestAnimationFrame(images);}images();
+</script>
+</body>
+<br><br><br>
+<audio controls loop src="audio/ost1.wav"></audio>
+</html>

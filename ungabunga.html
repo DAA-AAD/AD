@@ -14,7 +14,7 @@ const canvas=document.getElementById('game');
 const ctx=canvas.getContext('2d');
 let DPR=Math.max(1,window.devicePixelRatio||1);
 
-function resize() {
+function resize(){
   canvas.width=innerWidth*DPR;
   canvas.height=innerHeight*DPR;
   canvas.style.width=innerWidth+'px';
@@ -24,8 +24,10 @@ addEventListener('resize',resize);
 resize();
 
 let ded=0
+dedsfx=new Audio();
+dedsfx.src='audio/DedSfx.mp3'
 dedart=new Image();
-dedart.src='art/sob.png'
+dedart.src='art/froop_ded.png'
 //player
 const playerart=new Image();
 playerart.src='art/froop_fly.png';
@@ -37,18 +39,15 @@ addEventListener('keydown',e=>{keys[e.code]=true;
   if(e.code==='Space') e.preventDefault();});
 addEventListener('keyup',e=>{keys[e.code]=false;});
 
-let logy=0;let logx=0
-function logFall(){logx=(Math.floor()*(Math.random()*1201));logy=0;
-if(logy<625){logy=logy+3.125}else if(logy>625){logy=0;logx=(Math.floor()*(Math.random()*1201));logy=0;}
-requestAnimationFrame(logFall)
-}logFall()
-
 const platformart=new Image();
 platformart.src='art/Log.png'
-const platform={x:-500,y:-500,w:275.2,h:114.4}
+const platform={x:500,y:0,w:275.2,h:114.4}
+function logFall(){if(ded==0){
+if(platform.y<655){platform.y=platform.y+3.125}else if(platform.y>=655){platform.x=Math.floor((Math.random()*1070));platform.y=0;}
+requestAnimationFrame(logFall)}else{platform.x=-500;platform.y=-500}
+}logFall()
 
 function move(){if(ded==0){
-
 if(keys['KeyW']){froop.y=froop.y-12}
 if(keys['KeyA']){froop.x=froop.x-12}
 if(keys['KeyD']){froop.x=froop.x+12}
@@ -57,17 +56,17 @@ requestAnimationFrame(move)}
 }move()
 
 function gravity(){
-  if(froop.y<platform.y+(platform.h/2)&&froop.y>platform.y-(platform.h/2)&&froop.x<platform.x+(platform.w/2)&&froop.x>platform.x-(platform.w/2))
-{froop.y=platform.y+(platform.h/2)}else{froop.y=froop.y+6.25}
+  if(froop.y<platform.y+(platform.h/2)&&froop.y>platform.y-(platform.h/2)&&froop.x<platform.x+(platform.w/2)&&
+  froop.x>platform.x-(platform.w/2)){froop.y=platform.y+(platform.h/2)}else{froop.y=froop.y+6.25}
   if(froop.y>625){froop.y=625}
-if(froop.y>625){froop.y=625;ded=1;}
+if(froop.y>=625){froop.y=625;ded=1;dedsfx.play()}
 if(froop.y<0){froop.y=0}
     requestAnimationFrame(gravity)}gravity();
 
 function images(){ctx.clearRect(0,0,canvas.width,canvas.height);
   if(platformart.complete){ctx.drawImage(platformart,platform.x,platform.y,platform.w,platform.h)}
   if(playerart.complete){ctx.drawImage(playerart,froop.x,froop.y,froop.w,froop.h);}
-  if(dedart.complete&&ded==1){ctx.drawImage(dedart,0,0,919,919)}
+  if(dedart.complete&&ded==1){ctx.drawImage(dedart,0,0,1370,780)}
   requestAnimationFrame(images);}images();
 </script>
 </body>
