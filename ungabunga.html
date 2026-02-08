@@ -7,6 +7,8 @@
     <title>Froop Jump</title>
 </head>
 <body bgcolor="black">
+<h1 style="color: white;">Timer</h1>
+  <p style="color: antiquewhite;" id="timerDisplay">00:00:00</p>
 <canvas id="game"></canvas>
 <script>
 // no touchy!
@@ -37,32 +39,108 @@ addEventListener('keydown',e=>{keys[e.code]=true;
   if(e.code==='Space') e.preventDefault();});
 addEventListener('keyup',e=>{keys[e.code]=false;});
 
-let logy=0;let logx=0
-function logFall(){logx=(Math.floor()*(Math.random()*1201));logy=0;
-if(logy<625){logy=logy+3.125}else if(logy>625){logy=0;logx=(Math.floor()*(Math.random()*1201));logy=0;}
-requestAnimationFrame(logFall)
-}logFall()
+let logx = Math.random() * 1000;
+let logy = -200;
+let logVelY = 0;
+const logGravity = 0.7;
 
-const platformart=new Image();
-platformart.src='art/Log.png'
-const platform={x:-500,y:-500,w:275.2,h:114.4}
+const platform = {x: logx, y: logy, w: 275.2, h: 114.4};
+const platformart = new Image();
+platformart.src = 'art/Log.png';
 
-function move(){if(ded==0){
+function isTouching(a, b) {
 
-if(keys['KeyW']){froop.y=froop.y-12}
+return (
+a.x < b.x + b.w &&
+a.x + a.w > b.x &&
+a.y < b.y + b.h &&
+a.y + a.h > b.y
+
+);
+
+}
+
+function gameLoop() {
+
+  logVelY += logGravity;
+  logy += logVelY
+
+
+  
+
+  if (logy > canvas.height) {
+
+logy = -platform.h;
+ logVelY = 0;
+ logx = Math.random() * (canvas.width -platform.w);
+
+
+  }
+  platform.x = logx;
+  platform.y = logy;
+
+
+  if (isTouching(froop, platform)) {
+
+  window.location.href="DeathScreen.html";
+return;}
+  requestAnimationFrame(gameLoop);
+}
+gameLoop();
+
+
+function move(){if(keys['KeyW']){froop.y=froop.y-12}
 if(keys['KeyA']){froop.x=froop.x-12}
 if(keys['KeyD']){froop.x=froop.x+12}
 if(froop.x<0){froop.x=0}if(froop.x>1200){froop.x=1200}
-requestAnimationFrame(move)}
-}move()
+requestAnimationFrame(move)}move()
 
-function gravity(){
-  if(froop.y<platform.y+(platform.h/2)&&froop.y>platform.y-(platform.h/2)&&froop.x<platform.x+(platform.w/2)&&froop.x>platform.x-(platform.w/2))
-{froop.y=platform.y+(platform.h/2)}else{froop.y=froop.y+6.25}
-  if(froop.y>625){froop.y=625}
-if(froop.y>625){froop.y=625;ded=1;}
+
+
+function gravity(){froop.y=froop.y+6.25;if(froop.y>625){froop.y=625}
+   
+    if (froop.y >= 625) {
+
+froop.y=625;
+
+window.location.href = "DeathScreen.html"
+return;
+    }
+
+
 if(froop.y<0){froop.y=0}
+
     requestAnimationFrame(gravity)}gravity();
+
+const startTime = new Date();
+const timerDisplay = document.getElementById('timerDisplay')
+
+function updateTimer() {
+
+  const currentTime = new Date();
+
+
+  const timeElapsed = currentTime - startTime;
+
+
+
+  const seconds = Math.floor(timeElapsed / 1000) % 60;
+  const minutes = Math.floor(timeElapsed / 1000 * 60) % 60;
+  
+const formattedSeconds = seconds.toString().padStart(2, '0');
+const formattedMinutes = minutes.toString().padStart(2, '0');
+
+
+
+  timerDisplay.textContent = `${formattedMinutes}:${formattedSeconds}`;
+}
+
+setInterval(updateTimer, 1000);
+
+
+
+
+
 
 function images(){ctx.clearRect(0,0,canvas.width,canvas.height);
   if(platformart.complete){ctx.drawImage(platformart,platform.x,platform.y,platform.w,platform.h)}
@@ -73,3 +151,4 @@ function images(){ctx.clearRect(0,0,canvas.width,canvas.height);
 </body>
 <br><br><br>
 <audio controls loop src="audio/ost1.wav"></audio>
+</html>
