@@ -37,28 +37,30 @@ addEventListener('keydown',e=>{keys[e.code]=true;
   if(e.code==='Space') e.preventDefault();});
 addEventListener('keyup',e=>{keys[e.code]=false;});
 
-
 let logy=0;let logx=0
-const platformart=new Image();
-platformart.src='art/Log.png'
-const platform={x:logx,y:logy,w:275.2,h:114.4}
-
 function logFall(){logx=(Math.floor()*(Math.random()*1201));logy=0;
 if(logy<625){logy=logy+3.125}else if(logy>625){logy=0;logx=(Math.floor()*(Math.random()*1201));logy=0;}
 requestAnimationFrame(logFall)
 }logFall()
 
-function move(){if(ded==1){if(keys['KeyW']){froop.y=froop.y-12}
+const platformart=new Image();
+platformart.src='art/Log.png'
+const platform={x:-500,y:-500,w:275.2,h:114.4}
+
+function move(){if(ded==0){
+
+if(keys['KeyW']){froop.y=froop.y-12}
 if(keys['KeyA']){froop.x=froop.x-12}
 if(keys['KeyD']){froop.x=froop.x+12}
 if(froop.x<0){froop.x=0}if(froop.x>1200){froop.x=1200}
 requestAnimationFrame(move)}
 }move()
 
-function gravity(){froop.y=froop.y+6.25;if(froop.y>625){froop.y=625}
-if(froop.y>=625){froop.y=625;ded=1;
-window.location.href="DeathScreen.html" 
-return;}
+function gravity(){
+  if(froop.y<platform.y+(platform.h/2)&&froop.y>platform.y-(platform.h/2)&&froop.x<platform.x+(platform.w/2)&&froop.x>platform.x-(platform.w/2))
+{froop.y=platform.y+(platform.h/2)}else{froop.y=froop.y+6.25}
+  if(froop.y>625){froop.y=625}
+if(froop.y>625){froop.y=625;ded=1;}
 if(froop.y<0){froop.y=0}
     requestAnimationFrame(gravity)}gravity();
 
